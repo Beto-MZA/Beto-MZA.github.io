@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Cumpleaños de Beto</title>
+  <style>
+    :root{
+      --bg:#fff7ed;
+      --card:#ffffff;
+      --tx:#2b2118;
+      --mut:#7a6a5c;
+      --bd:#f1dcc6;
+      --ac:#e8590c;
+      --pink:#ff4fa3;
+      --gold:#f7c948;
+      --green:#34c759;
+      --blue:#2f80ed;
+      --purple:#7b61ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--tx);
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    body{
+      background:
+        radial-gradient(circle at 15% 8%, rgba(255,200,120,.38), transparent 45%),
+        radial-gradient(circle at 88% 28%, rgba(255,120,170,.28), transparent 42%),
+        radial-gradient(circle at 20% 85%, rgba(120,200,255,.25), transparent 45%),
+        var(--bg);
+      background-attachment: fixed;
+    }
+
+    .bg-anim{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 10% 15%, rgba(255,210,100,.16), transparent 18%),
+        radial-gradient(circle at 80% 10%, rgba(255,120,180,.12), transparent 18%),
+        radial-gradient(circle at 30% 70%, rgba(130,220,255,.12), transparent 22%);
+    }
+
+    .balloon{
+      position: absolute;
+      bottom: -220px;
+      left: var(--left);
+      width: var(--size);
+      height: calc(var(--size) * 1.26);
+      border-radius: 50% 50% 48% 48% / 56% 56% 44% 44%;
+      background: var(--c);
+      box-shadow: inset -8px -8px 0 rgba(0,0,0,.08), 0 8px 18px rgba(0,0,0,.08);
+      opacity: .9;
+      animation: floatUp var(--dur) ease-in infinite;
+      transform-origin: center bottom;
+      z-index: 0;
+    }
+
+    .balloon::before{
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      width: 2px;
+      height: 60px;
+      background: rgba(80,80,80,.45);
+      transform: translateX(-50%);
+    }
+
+    .balloon::after{
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 17%;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.35);
+      transform: translateX(-50%);
+    }
+
+    @keyframes floatUp{
+      0%{
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 0;
+      }
+      10%{
+        opacity: .9;
+      }
+      50%{
+        transform: translateY(-60vh) rotate(12deg) scale(1.02);
+      }
+      100%{
+        transform: translateY(-110vh) rotate(-12deg) scale(.96);
+        opacity: 0;
+      }
+    }
+
+    .confetti{
+      position: absolute;
+      width: 10px;
+      height: 14px;
+      border-radius: 3px;
+      opacity: .9;
+      z-index: 0;
+      animation: confSide linear infinite;
+    }
+
+    @keyframes confSide{
+      0%{
+        transform: translate3d(var(--sx), var(--sy), 0) rotate(0deg);
+        opacity: 1;
+      }
+      100%{
+        transform: translate3d(var(--dx), 110vh, 0) rotate(var(--rot));
+        opacity: 0;
+      }
+    }
+
+    .music-btn{
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 20;
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #2b2118;
+      box-shadow: 0 8px 18px rgba(0,0,0,.12);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 1.15rem;
+      padding: 0;
+      user-select: none;
+    }
+
+    main{
+      position: relative;
+      z-index: 2;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 26px 16px 50px;
+    }
+
+    h1{
+      font-size: clamp(2rem, 3vw, 3rem);
+      margin: 10px 0 6px;
+      line-height: 1.08;
+      letter-spacing: .02em;
+      font-weight: 900;
+    }
+
+    .sub{
+      margin: 0 0 18px;
+      color: var(--mut);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .wheelwrap{
+      position: relative;
+      width: min(88vw, 360px);
+      aspect-ratio: 1;
+      margin: 0 auto 18px;
+      display: grid;
+      place-items: center;
+    }
+
+    #wheel{
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-shadow: 0 12px 30px rgba(0,0,0,.22);
+      display: block;
+      transition: transform 5s cubic-bezier(.12,.6,.1,1);
+      background: transparent;
+    }
+
+    .ptr{
+      position: absolute;
+      left: 50%;
+      top: -10px;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 28px solid #1d1a17;
+      z-index: 2;
+      filter: drop-shadow(0 3px 2px rgba(0,0,0,.15));
+    }
+
+    .hub{
+      position: absolute;
+      inset: 42%;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #1d1a17;
+      z-index: 1;
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,.05);
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--bd);
+      border-radius: 18px;
+      padding: 16px 16px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.03);
+    }
+
+    input{
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 14px;
+      font-size: 1rem;
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+      background: var(--bg);
+      color: var(--tx);
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    input:focus{
+      border-color: var(--ac);
+      box-shadow: 0 0 0 4px rgba(232,89,12,.12);
+    }
+
+    button{
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1.04rem;
+      font-weight: 800;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--ac), #ff8b3d);
+      color: #fff;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease;
+      box-shadow: 0 10px 18px rgba(232,89,12,.25);
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:disabled{
+      opacity: .55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .res{
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin: 10px 0 4px;
+      min-height: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,.06);
+    }
+
+    .note{
+      color: var(--mut);
+      font-size: 0.84rem;
+      min-height: 18px;
+      margin-top: 6px;
+    }
+
+    h2{
+      font-size: 1.12rem;
+      margin: 0 0 10px;
+      text-align: left;
+    }
+
+    ul{
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+    }
+
+    li{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--bd);
+    }
+
+    li:last-child{ border-bottom: 0; }
+
+    .dot{
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      flex: none;
+      border: 2px solid rgba(0,0,0,.15);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.2);
+    }
+
+    .who{
+      flex: 1;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .cn{
+      color: var(--mut);
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .empty{
+      color: var(--mut);
+      text-align: center;
+      padding: 8px 0;
+      border: 0;
+    }
+
+    .invite{
+      display: none;
+      margin-top: 16px;
+      background: linear-gradient(180deg, #fff9f0, #fff);
+      border: 1px solid #f4d8b3;
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      box-shadow: 0 12px 26px rgba(255, 120, 0, 0.12);
+      text-align: left;
+    }
+
+    .invite.show{
+      display: block;
+      animation: fadeUp .7s ease;
+    }
+
+    @keyframes fadeUp{
+      from{ opacity:0; transform: translateY(18px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    .invite h3{
+      margin: 0 0 12px;
+      text-align: center;
+      color: var(--ac);
+      font-size: 1.32rem;
+      font-weight: 900;
+    }
+
+    .invite p{
+      margin: 10px 0;
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: var(--tx);
+    }
+
+    .address{
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 10px;
+      background: #fff0d9;
+      border: 1px solid #f5c97e;
+      color: #7a4200;
+      font-weight: 900;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
+    }
+
+    @media (max-width: 420px){
+      .music-btn{
+        width: 38px;
+        height: 38px;
+        top: 10px;
+        right: 10px;
+        font-size: 1rem;
+      }
+      h1{ font-size: 2.1rem; }
+      .invite p{ font-size: .98rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-anim" id="bgAnim" aria-hidden="true"></div>
+
+  <button class="music-btn" id="musicToggle" aria-label="Toggle music">🔇</button>
+
+  <audio id="audio" loop preload="auto" style="display:none;"></audio>
+
+  <main>
+    <h1>Cumpleaños de Beto</h1>
+    <p class="sub">Girá la ruleta y descubrí cómo vas a ir y qué tenés que llevar.</p>
+
+    <div class="wheelwrap">
+      <div class="ptr"></div>
+      <div class="hub"></div>
+      <canvas id="wheel" width="680" height="680"></canvas>
+    </div>
+
+    <div class="card">
+      <input id="name" type="text" placeholder="Nombre y apellido" autocomplete="name" maxlength="60" />
+      <button id="spin">¡Girar!</button>
+      <div id="res" class="res"></div>
+      <div id="note" class="note"></div>
+    </div>
+
+    <div class="card">
+      <h2>Historial</h2>
+      <ul id="hist">
+        <li class="empty">Todavía nadie giró</li>
+      </ul>
+    </div>
+
+    <div id="invite" class="invite" aria-live="polite">
+      <h3>¡Te invito!</h3>
+      <p>Te invito el <strong>Sábado 31 de Octubre</strong> en la casa de la Mel de SUR.</p>
+      <p>La dirección es <span class="address">Valdivia 646 Guaymallén</span>.</p>
+      <p>Te espero y recordá llevar para tomar, te quiero.</p>
+    </div>
+  </main>
+
+  <script>
+    const COLORS = [
+      ["Negro", "#1a1a1a"],
+      ["Blanco", "#f5f5f5"],
+      ["Gris", "#8c9096"],
+      ["Gris oscuro", "#4a4d52"],
+      ["Beige", "#d8c3a5"],
+      ["Marrón", "#6b4226"],
+      ["Azul", "#1f5fbf"],
+      ["Celeste", "#7ec8f0"],
+      ["Jean", "#4a6fa5"],
+      ["Verde", "#2e8b4a"],
+      ["Rojo", "#d62828"],
+      ["Bordó", "#7a1f33"],
+      ["Naranja", "#f77f00"],
+      ["Amarillo", "#f9d423"],
+      ["Rosa", "#f6a6c1"],
+      ["Violeta", "#6a3fb5"],
+      ["Lila", "#c3a6e8"]
+    ];
+
+    const STORAGE_KEY = "cumple_beto_v9";
+    const wheel = document.getElementById("wheel");
+    const ctx = wheel.getContext("2d");
+    const nameInput = document.getElementById("name");
+    const spinBtn = document.getElementById("spin");
+    const resEl = document.getElementById("res");
+    const noteEl = document.getElementById("note");
+    const histEl = document.getElementById("hist");
+    const inviteEl = document.getElementById("invite");
+    const musicToggle = document.getElementById("musicToggle");
+    const audio = document.getElementById("audio");
+    const bgAnim = document.getElementById("bgAnim");
+
+    let history = {};
+    let myEntry = null;
+    let spinning = false;
+    let totalRotation = 0;
+    let musicOn = false;
+
+    const MUSIC_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        history = parsed.history || {};
+        myEntry = parsed.myEntry || null;
+      } catch (e) {
+        history = {};
+        myEntry = null;
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ history, myEntry }));
+    }
+
+    function getAvailableIndices() {
+      return COLORS.map((_, i) => i).filter(i => !history[i]);
+    }
+
+    function updateInputState() {
+      if (myEntry) {
+        nameInput.value = myEntry.name;
+        nameInput.disabled = true;
+        spinBtn.disabled = true;
+        spinBtn.textContent = "Ya giraste";
+        resEl.textContent = "Tu color: " + COLORS[myEntry.color][0];
+        resEl.style.color = COLORS[myEntry.color][1];
+      } else {
+        nameInput.disabled = false;
+        spinBtn.disabled = false;
+        spinBtn.textContent = "¡Girar!";
+      }
+    }
+
+    function drawWheel() {
+      const available = getAvailableIndices();
+      const center = wheel.width / 2;
+      const outerRadius = center - 4;
+
+      ctx.clearRect(0, 0, wheel.width, wheel.height);
+
+      if (!available.length) {
+        ctx.fillStyle = "#888";
+        ctx.beginPath();
+        ctx.arc(center, center, outerRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 44px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("¡Sin colores!", center, center + 14);
+        return;
+      }
+
+      const slice = (Math.PI * 2) / available.length;
+
+      available.forEach((idx, i) => {
+        const start = -Math.PI / 2 + i * slice;
+        const end = start + slice;
+
+        ctx.beginPath();
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, outerRadius, start, end);
+        ctx.closePath();
+
+        ctx.fillStyle = COLORS[idx][1];
+        ctx.fill();
+
+        ctx.strokeStyle = "rgba(255,255,255,.7)";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      });
+    }
+
+    function renderHistory() {
+      const entries = Object.keys(history).map(Number).sort((a, b) => history[a].ts - history[b].ts);
+
+      if (!entries.length) {
+        histEl.innerHTML = '<li class="empty">Todavía nadie giró</li>';
+        return;
+      }
+
+      histEl.innerHTML = "";
+
+      [...entries].reverse().forEach(index => {
+        const item = document.createElement("li");
+        const dot = document.createElement("span");
+        const who = document.createElement("span");
+        const colorName = document.createElement("span");
+
+        dot.className = "dot";
+        dot.style.background = COLORS[index][1];
+
+        who.className = "who";
+        who.textContent = history[index].name;
+
+        colorName.className = "cn";
+        colorName.textContent = COLORS[index][0];
+
+        item.appendChild(dot);
+        item.appendChild(who);
+        item.appendChild(colorName);
+
+        histEl.appendChild(item);
+      });
+    }
+
+    function createConfettiBurst() {
+      const colors = ["#ff4fa3", "#f7c948", "#34c759", "#2f80ed", "#ff7a18", "#7b61ff", "#ff4d4d", "#ffffff"];
+      const sides = ["left", "right"];
+      for (let i = 0; i < 80; i++) {
+        const p = document.createElement("span");
+        p.className = "confetti";
+
+        const side = sides[Math.floor(Math.random() * sides.length)];
+        const offsetX = side === "left" ? -20 : window.innerWidth + 20;
+        const drift = (Math.random() * 240) - 120;
+        const startY = -30 - Math.random() * 80;
+        const finalX = (side === "left" ? 1 : -1) * (80 + Math.random() * 260) + drift;
+
+        p.style.left = offsetX + "px";
+        p.style.top = startY + "px";
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.setProperty("--sx", "0px");
+        p.style.setProperty("--sy", "0px");
+        p.style.setProperty("--dx", finalX + "px");
+        p.style.setProperty("--rot", (Math.random() * 720 - 360) + "deg");
+        p.style.animationDuration = (2.2 + Math.random() * 2.8) + "s";
+        bgAnim.appendChild(p);
+
+        setTimeout(() => p.remove(), 5000);
+      }
+    }
+
+    function createBalloon() {
+      const balloon = document.createElement("div");
+      balloon.className = "balloon";
+      const colors = ["#ff4fa3", "#f7c948", "#2f80ed", "#34c759", "#ff7a18", "#7b61ff", "#ff5a5a", "#ffcc00"];
+      const chosen = colors[Math.floor(Math.random() * colors.length)];
+      balloon.style.setProperty("--c", chosen);
+      balloon.style.setProperty("--left", (Math.random() * 94) + "%");
+      balloon.style.setProperty("--size", (34 + Math.random() * 42) + "px");
+      balloon.style.setProperty("--dur", (10 + Math.random() * 10) + "s");
+      bgAnim.appendChild(balloon);
+
+      setTimeout(() => balloon.remove(), 15000);
+    }
+
+    function startBalloonLoop() {
+      setInterval(createBalloon, 1400);
+      setInterval(createConfettiBurst, 900);
+    }
+
+    function showInvitation() {
+      inviteEl.classList.add("show");
+      inviteEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function setMusicState(on) {
+      audio.src = MUSIC_URL;
+      audio.volume = 0.6;
+      audio.muted = !on;
+      if (on) {
+        audio.play();
+        musicToggle.textContent = "🔊";
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+        musicToggle.textContent = "🔇";
+      }
+      musicOn = on;
+    }
+
+    function toggleMusic() {
+      setMusicState(!musicOn);
+    }
+
+    function spin() {
+      if (spinning || myEntry) return;
+
+      const rawName = nameInput.value.trim().replace(/\s+/g, " ");
+      const parts = rawName.split(" ").filter(Boolean);
+
+      if (rawName.length < 5 || parts.length < 2) {
+        noteEl.textContent = "Escribí tu nombre y apellido para girar.";
+        return;
+      }
+
+      const available = getAvailableIndices();
+      if (!available.length) {
+        noteEl.textContent = "No quedan colores disponibles.";
+        return;
+      }
+
+      spinning = true;
+      noteEl.textContent = "";
+      nameInput.disabled = true;
+      spinBtn.disabled = true;
+
+      createConfettiBurst();
+
+      const chosenIndex = available[Math.floor(Math.random() * available.length)];
+      const segmentSize = 360 / available.length;
+      const randomOffset = (Math.random() - 0.5) * segmentSize * 0.7;
+      const targetDegrees = 360 * 6 - (chosenIndex + 0.5) * segmentSize + randomOffset;
+
+      totalRotation = Math.ceil(totalRotation / 360) * 360 + targetDegrees;
+      wheel.style.transform = "rotate(" + totalRotation + "deg)";
+
+      setTimeout(() => {
+        const record = { name: rawName, color: chosenIndex, ts: Date.now() };
+        history[chosenIndex] = record;
+        myEntry = { name: rawName, color: chosenIndex };
+        saveState();
+
+        spinning = false;
+        wheel.style.transition = "none";
+        wheel.style.transform = "rotate(0deg)";
+        totalRotation = 0;
+
+        requestAnimationFrame(() => {
+          wheel.style.transition = "transform 5s cubic-bezier(.12,.6,.1,1)";
+        });
+
+        updateInputState();
+        renderHistory();
+        resEl.textContent = "Tu color: " + COLORS[chosenIndex][0];
+        resEl.style.color = COLORS[chosenIndex][1];
+        noteEl.textContent = "¡Listo! Ya quedó guardado tu color.";
+
+        createConfettiBurst();
+        setTimeout(showInvitation, 300);
+
+      }, 5000);
+    }
+
+    musicToggle.addEventListener("click", toggleMusic);
+    spinBtn.addEventListener("click", spin);
+
+    loadState();
+    drawWheel();
+    renderHistory();
+    updateInputState();
+    startBalloonLoop();
+
+    setMusicState(false);
+
+    // activa audio al primer toque, como navegador lo permite
+    document.addEventListener("pointerdown", () => {
+      if (!musicOn) {
+        setMusicState(true);
+      }
+    }, { once: true });
+  </script>
+</body>
+</html>
